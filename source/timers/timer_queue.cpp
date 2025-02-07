@@ -145,12 +145,16 @@ namespace concurrencpp::details {
     }  // namespace
 }  // namespace concurrencpp::details
 
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wreorder"
 timer_queue::timer_queue(milliseconds max_waiting_time,
                          const std::function<void(std::string_view thread_name)>& thread_started_callback,
                          const std::function<void(std::string_view thread_name)>& thread_terminated_callback) :
     m_thread_started_callback(thread_started_callback),
     m_thread_terminated_callback(thread_terminated_callback), m_atomic_abort(false), m_abort(false), m_idle(true),
     m_max_waiting_time(max_waiting_time) {}
+#pragma GCC diagnostic pop
 
 timer_queue::~timer_queue() noexcept {
     shutdown();
@@ -271,6 +275,9 @@ concurrencpp::details::thread timer_queue::ensure_worker_thread(std::unique_lock
     return old_worker;
 }
 
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wreorder"
 concurrencpp::lazy_result<void> timer_queue::make_delay_object_impl(std::chrono::milliseconds due_time,
                                                                     std::shared_ptr<concurrencpp::timer_queue> self,
                                                                     std::shared_ptr<concurrencpp::executor> executor) {
@@ -311,6 +318,7 @@ concurrencpp::lazy_result<void> timer_queue::make_delay_object_impl(std::chrono:
 
     co_await delay_object_awaitable {static_cast<size_t>(due_time.count()), *this, std::move(executor)};
 }
+#pragma GCC diagnostic pop 
 
 concurrencpp::lazy_result<void> timer_queue::make_delay_object(std::chrono::milliseconds due_time,
                                                                std::shared_ptr<executor> executor) {
