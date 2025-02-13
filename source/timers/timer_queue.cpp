@@ -255,6 +255,9 @@ void timer_queue::shutdown() {
     m_worker.join();
 }
 
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wreorder"
 concurrencpp::details::thread timer_queue::ensure_worker_thread(std::unique_lock<std::mutex>& lock) {
     assert(lock.owns_lock());
     if (!m_idle) {
@@ -274,6 +277,7 @@ concurrencpp::details::thread timer_queue::ensure_worker_thread(std::unique_lock
     m_idle = false;
     return old_worker;
 }
+#pragma GCC diagnostic pop 
 
 #pragma GCC diagnostic push 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
