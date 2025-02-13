@@ -14,6 +14,9 @@ thread_executor::~thread_executor() noexcept {
     assert(m_last_retired.empty());
 }
 
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wreorder"
 void thread_executor::enqueue_impl(std::unique_lock<std::mutex>& lock, concurrencpp::task& task) {
     assert(lock.owns_lock());
 
@@ -27,6 +30,7 @@ void thread_executor::enqueue_impl(std::unique_lock<std::mutex>& lock, concurren
         m_thread_started_callback,
         m_thread_terminated_callback);
 }
+#pragma GCC diagnostic pop 
 
 void thread_executor::enqueue(concurrencpp::task task) {
     std::unique_lock<std::mutex> lock(m_lock);
